@@ -154,4 +154,6 @@ def get_fid_ours(n):
 
     return fid
 
-print(get_fid_ours(n_fid_samples))
+
+if __name__ == "__main__":
+    print(get_fid_ours(n_fid_samples))
