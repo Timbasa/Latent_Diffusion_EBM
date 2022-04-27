@@ -63,9 +63,9 @@ def train():
         optG.step()
 
         optE.zero_grad()
-        a_s = _extract(a_s_prev, t + 1, z_pos.shape)
-        y_pos = a_s * z_pos
-        y_neg = a_s * z_neg
+        a_s_t = _extract(a_s_prev, t + 1, z_pos.shape)
+        y_pos = a_s_t * z_pos
+        y_neg = a_s_t * z_neg
         en_pos, en_neg = E(y_pos.detach()).mean(), E(y_neg.detach()).mean()
         loss_e = en_pos - en_neg
         loss_e.backward()
