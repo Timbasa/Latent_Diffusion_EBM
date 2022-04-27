@@ -21,11 +21,11 @@ def q_sample_pairs(z_start, t, a_s, sigmas, a_s_cum, sigmas_cum):
 
 
 # Get the sequence of {z_i} for i = {0,1,...t}
-def q_sample_full(z_start, num_timesteps):
+def q_sample_full(z_start, num_timesteps, a_s_cum, sigmas_cum):
     z_pred = []
     for t in range(num_timesteps + 1):
         t_now = torch.ones(z_start.shape[0], dtype=torch.long) * t
-        z = q_sample(z_start, t_now)
+        z = q_sample(z_start, t_now, a_s_cum, sigmas_cum)
         z_pred.append(z)
     z_preds = torch.stack(z_pred, dim=0)
     return z_preds

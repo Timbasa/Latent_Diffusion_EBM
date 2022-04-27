@@ -50,7 +50,7 @@ def train():
 
         B = z_g_0.shape[0]
         t = torch.randint(high=num_timesteps, size=(B,)).to(device)
-        z_g_k = sample_langevin_posterior(z_g_0, x, G, E, t, K_1, llhd_sigma, mse, num_timesteps, sigmas, a_1)
+        z_g_k = sample_langevin_posterior(z_g_0, x, G, E, t, K_1, llhd_sigma, mse, num_timesteps, sigmas, a_1, a_s_cum, sigmas_cum)
 
         # Add the timesteps to diffuse z_e_0 to z_e_t.
         z_pos, z_neg = q_sample_pairs(z_g_k, t, a_s, sigmas, a_s_cum, sigmas_cum)
@@ -116,5 +116,6 @@ def test():
     fig.savefig("outputs/Latent_Diffusion_EBM_Generation.pdf", bbox_inches='tight', dpi=1200)
     plt.close(fig)
 
-train()
-test()
+if __name__ == "__main__":
+    train()
+    test()

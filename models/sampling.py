@@ -45,7 +45,7 @@ def sample_langevin_prior(z, E, t, sigmas, sigmas_cum, a_s_prev, mcmc_step_size_
 # MCMC sampling for Generator model p(z|x) = p(z) * p(x|z) / p(x)
 # grad(log p(x|z)) = sum_t(grad_z_t(log p(z_{t}|z_{t-1}))) - gaussia  //EBM part
 #                       + grad_z(G(z))
-def sample_langevin_posterior(z, x, G, E, t, K_1, llhd_sigma, mse, num_timesteps, sigmas, a_1):
+def sample_langevin_posterior(z, x, G, E, t, K_1, llhd_sigma, mse, num_timesteps, sigmas, a_1, a_s_cum, sigmas_cum):
     y = z.clone().detach().requires_grad_(True)
     for i in range(K_1):
         x_hat = G(y)
@@ -53,7 +53,7 @@ def sample_langevin_posterior(z, x, G, E, t, K_1, llhd_sigma, mse, num_timesteps
         grad_g = torch.autograd.grad(g_log_lkhd, y)[0]
 
         # EBM likelihood = sum_t(grad(E(z_t), z_t))
-        z_ts = q_sample_full(y, num_timesteps)
+        z_ts = q_sample_full(y, num_timesteps, a_s_cum, sigmas_cum)
         grad_e = - torch.randn_like(y)
         for t, (z_t, z_t_plus_one) in enumerate(zip(z_ts,z_ts[1:])):
             sigma = _extract(sigmas, t + 1, z.shape)
